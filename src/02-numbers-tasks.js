@@ -51,8 +51,9 @@ function getCircleCircumference(r) {
  *  10, 0  => 5
  *  -3, 3  => 0
  */
-function getAverage() {
-  throw new Error('Not implemented');
+function getAverage(a, b) {
+  /* global BigInt */
+  return Number((BigInt(a) + BigInt(b)) / BigInt(2));
 }
 
 /**
@@ -183,8 +184,12 @@ function getParallelepipedDiagonal(a, b, c) {
  *   1678, 2  => 1700
  *   1678, 3  => 2000
  */
-function roundToPowerOfTen() {
-  throw new Error('Not implemented');
+function roundToPowerOfTen(n, p) {
+  const v = 10 ** p;
+  const rest = n % v;
+  let rest10 = n - rest;
+  if (rest / v > 0.5) rest10 += v;
+  return rest10;
 }
 
 /**

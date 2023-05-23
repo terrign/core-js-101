@@ -194,8 +194,11 @@ function findFirstSingleChar(str) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  const start = isStartIncluded ? '[' : '(';
+  const end = isEndIncluded ? ']' : ')';
+  const interval = [a, b].sort().join(', ');
+  return `${start}${interval}${end}`;
 }
 
 
@@ -322,8 +325,8 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return num.toString(n);
 }
 
 
@@ -397,8 +400,47 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(pos) {
+  const check = (s) => {
+    const CTRL = ['XXX', '000'];
+    if (CTRL.indexOf(s) !== -1) return s[0];
+    return undefined;
+  };
+  const validateLines = () => {
+    let result;
+    for (let i = 0; i < 3; i += 1) {
+      const lineStr = pos[i].reduce((acc, a) => acc + a, '');
+      result = check(lineStr);
+      if (result) break;
+    }
+    return result;
+  };
+  const validateCols = () => {
+    let result;
+    for (let i = 0; i < 3; i += 1) {
+      const col = [];
+      for (let j = 0; j < 3; j += 1) {
+        col.push(pos[j][i]);
+      }
+      result = check(col.join(''));
+      if (result) break;
+    }
+    return result;
+  };
+
+  const validateDiag = () => {
+    const d1 = `${pos[0][0]}${pos[1][1]}${pos[2][2]}`;
+    let result = check(d1);
+    if (result) return result;
+    const d2 = `${pos[2][0]}${pos[1][1]}${pos[0][2]}`;
+    result = check(d2);
+    if (result) return result;
+    return undefined;
+  };
+  if (validateLines(pos)) return validateLines(pos);
+  if (validateCols(pos)) return validateCols(pos);
+  if (validateDiag(pos)) return validateDiag(pos);
+  return undefined;
 }
 
 

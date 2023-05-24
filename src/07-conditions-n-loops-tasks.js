@@ -120,8 +120,32 @@ function isTriangle(a, b, c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(r1, r2) {
+  const innerFunc = (rect1, rect2) => {
+    const highs2 = {
+      topLeft: [rect2.top, rect2.left],
+      topRight: [rect2.top, rect2.left + rect2.width],
+      botLeft: [rect2.top + rect2.height, rect2.left],
+      botRight: [rect2.top + rect2.height, rect2.left + rect2.width],
+    };
+
+    const highs1 = {
+      topLeft: [rect1.top, rect1.left],
+      botRight: [rect1.top + rect1.height, rect1.left + rect1.width],
+    };
+
+    const result = Object.values(highs2).find((a) => {
+      const res = a[0] >= highs1.topLeft[0] && a[1] >= highs1.topLeft[1]
+      && a[0] <= highs1.botRight[0] && a[1] <= highs1.botRight[1];
+      return res;
+    });
+    return Boolean(result);
+  };
+
+  const res1 = innerFunc(r1, r2);
+  const res2 = innerFunc(r2, r1);
+
+  return res1 || res2;
 }
 
 
@@ -151,8 +175,10 @@ function doRectanglesOverlap(/* rect1, rect2 */) {
  *   { center: { x:0, y:0 }, radius:10 },  { x:10, y:10 }   => false
  *
  */
-function isInsideCircle(/* circle, point */) {
-  throw new Error('Not implemented');
+function isInsideCircle(circle, point) {
+  const [x1, y1, x2, y2] = [circle.center.x, circle.center.y, point.x, point.y];
+  const distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+  return distance < circle.radius;
 }
 
 
@@ -256,9 +282,20 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const arr = Array.from(ccn.toString(), (a) => +a);
+  const isOdd = arr.length % 2 !== 0;
+  const controlSum = arr.reduce((acc, a, i) => {
+    let v = a;
+    if ((i % 2 !== 0 && isOdd) || (i % 2 === 0 && !isOdd)) {
+      if (v * 2 > 9) v = v * 2 - 9;
+      else v *= 2;
+    }
+    return acc + v;
+  }, 0);
+  return controlSum % 10 === 0;
 }
+
 
 /**
  * Returns the digital root of integer:
@@ -300,8 +337,14 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+
+function isBracketsBalanced(str) {
+  const regExp = /\[\]|\{\}|\(\)|<>/g;
+  const innerFunc = (s) => {
+    const outStr = s.replace(regExp, '');
+    return outStr !== s ? innerFunc(outStr) : outStr;
+  };
+  return !innerFunc(str);
 }
 
 
@@ -342,8 +385,15 @@ function toNaryString(num, n) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const array = Array.from(pathes, (a) => a.replace(/\//g, '/#').split('#')).sort((a, b) => b.length - a.length);
+  const groupsByIndexex = [];
+  for (let i = 0; i < array[0].length; i += 1) {
+    const indexArr = [];
+    array.forEach((a) => indexArr.push(a[i]));
+    groupsByIndexex.push(indexArr);
+  }
+  return groupsByIndexex.map((a) => [...new Set(a)]).filter((a) => a.length === 1).join('');
 }
 
 
@@ -365,8 +415,19 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const result = [];
+  for (let i = 0; i < m1.length; i += 1) {
+    result[i] = [];
+    for (let j = 0; j < m2[0].length; j += 1) {
+      let s = 0;
+      for (let n = 0; n < m1[0].length; n += 1) {
+        s += m1[i][n] * m2[n][j];
+      }
+      result[i][j] = s;
+    }
+  }
+  return result;
 }
 
 

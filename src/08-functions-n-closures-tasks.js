@@ -23,10 +23,13 @@
  *   getComposition(Math.sin, Math.asin)(x) => Math.sin(Math.asin(x))
  *
  */
+// function getComposition(f, g) {
+//   return function k(x) {
+//     return f(g(x));
+//   };
+// }
 function getComposition(f, g) {
-  return function k(x) {
-    return f(g(x));
-  };
+  return (x) => f(g(x));
 }
 
 /**
@@ -46,8 +49,7 @@ function getComposition(f, g) {
  *
  */
 function getPowerFunction(e) {
-  const f = (x) => x ** e;
-  return f;
+  return (x) => x ** e;
 }
 
 
